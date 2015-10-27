@@ -23,6 +23,12 @@ console.log('this tab run owner?', r.thisTabRunOwner());
 `````
 
 
+## Install
+
+> bower install run-cito.js
+
+
+
 ## More 
 
 https://toster.ru/q/260582
