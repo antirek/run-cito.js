@@ -17,9 +17,14 @@
 <script src="run.js"></script>
 <script>
 
-var r = new run();
-console.log(r.isRunning());
-console.log(r.thisRunning());
+var r = new run({
+	cb: function () {
+		console.log("start!");
+	}
+});
+console.log('isRunning', r.isRunning());
+console.log('this tab run owner?', r.thisTabRunOwner());
+
 
 </script>
 

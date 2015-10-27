@@ -1,64 +1,83 @@
-var run = function () {
+var run = function (options) {
     
+    var callback = options.cb || function () {console.log('callback')};
+
     var interval = 1000;
     
-    var rObj = {
+    var processMarker = {
         id: Math.random()
     };
 
-    console.log('obj.id:', rObj.id);
+    console.log('marker.id:', processMarker.id);
 
-    var existObj = function () {
-        var obj = JSON.parse(localStorage.getItem("rObj"));
-        return (obj && obj['time'] && obj['id']);
+    var existmarker = function () {
+        var marker = JSON.parse(localStorage.getItem("processMarker"));
+        return (marker && marker['time'] && marker['id']);
     };
 
     var isRunning = function () {
-        var obj = JSON.parse(localStorage.getItem("rObj"));
-
-        var lastTime = parseInt(obj['time']);
-        return (lastTime + interval + 500 > Date.now());
-    };
-
-    var thisRunning = function () {
-        var obj = JSON.parse(localStorage.getItem("rObj"));
-        var id = parseFloat(obj['id']);
-        return ( id === rObj.id );
-    };
-
-    var tick = function () {
-        rObj['time'] = Date.now();
-        console.log('run', rObj.id, rObj['time']);
-        return str = JSON.stringify(rObj)
-    };
-    
-    var init = function () {
-        localStorage.setItem("rObj", tick());
-        setInterval(function () {
-            localStorage.setItem("rObj", tick());
-        }, interval);
-    };
-    
-    var tryInit = function () {        
-        if (!existObj() || !isRunning()) {
-            init();    
+        var marker = JSON.parse(localStorage.getItem("processMarker"));
+        if (marker) {
+            var lastTime = parseInt(marker['time']);
+            return (lastTime + interval + 2000 > Date.now());
+        } else {
+            return false;
         }
     };
 
-    if (isRunning() && !thisRunning()) {        
-        var q = setInterval(function () {
-            console.log('tryInit');
-            tryInit();
-            if (thisRunning()) { 
-                clearInterval(q); 
-            }
-        }, interval);        
+    var thisTabRunOwner = function () {
+
+        var marker = JSON.parse(localStorage.getItem("processMarker"));
+        var id = parseFloat(marker['id']);
+        console.log('storage id', id, 'currentId', processMarker.id);
+        return ( id === processMarker.id );
+    };
+
+    var tick = function () {
+        processMarker['time'] = Date.now();
+        console.log('run', processMarker.id, processMarker['time']);
+        return str = JSON.stringify(processMarker)
+    };
+
+    var intervalHandler = function () {
+        localStorage.setItem("processMarker", tick());
+        if (!thisTabRunOwner()) {
+            clearInterval(intervalHandler);
+        }
+    };
+
+    var init = function () {
+        localStorage.setItem("processMarker", tick());
+        setInterval(intervalHandler, interval);
+        callback();
+    };
+
+    var tryInit = function () {        
+        if (!existmarker() || !isRunning()) {
+            init();
+        }
+    };
+
+    if (isRunning()) {
+        if (!thisTabRunOwner()) {
+            console.log('is isRunning but not this tab, set checker');   
+            var q = setInterval(function () {
+                console.log('tryInit');
+                tryInit();
+                if (thisTabRunOwner()) { 
+                    clearInterval(q); 
+                }
+            }, interval);        
+        } else {
+            console.log('is running and this tab owner - all ok');
+        }
     } else {
+        console.log('not running, tryInit')
         tryInit();
     }
 
     return {
         isRunning: isRunning,
-        thisRunning: thisRunning
+        thisTabRunOwner: thisTabRunOwner
     };
 };
