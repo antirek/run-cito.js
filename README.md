@@ -7,7 +7,7 @@ will be closed.
 
 ## Use
 
-`````
+`````javascript
 
 var r = new run({
 	callback: function () {
