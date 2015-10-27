@@ -1,5 +1,9 @@
 # run-cito.js
 
+If you add this script with callback on page and open page in two tabs
+you exec callback only in one tab, other tab will wait when first tab 
+will be closed.
+
 
 ## Use
 
@@ -17,3 +21,8 @@ console.log('this tab run owner?', r.thisTabRunOwner());
 
 
 `````
+
+
+## More 
+
+https://toster.ru/q/260582
