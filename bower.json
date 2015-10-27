@@ -1,0 +1,16 @@
+{
+  "name": "run-cito.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/antirek/run-cito.js",
+  "authors": [
+    "Sergey Dmitriev <serge.dmitriev@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

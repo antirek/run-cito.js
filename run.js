@@ -1,6 +1,7 @@
 var run = function (options) {
     
-    var callback = options.cb || function () {console.log('callback')};
+    var callback = options.callback || function () {console.log('callback')};
+    var debug = options.debug || true;
 
     var interval = 1000;
     
@@ -8,7 +9,7 @@ var run = function (options) {
         id: Math.random()
     };
 
-    console.log('marker.id:', processMarker.id);
+    if (debug) console.log('marker.id:', processMarker.id);
 
     var existmarker = function () {
         var marker = JSON.parse(localStorage.getItem("processMarker"));
@@ -29,13 +30,13 @@ var run = function (options) {
 
         var marker = JSON.parse(localStorage.getItem("processMarker"));
         var id = parseFloat(marker['id']);
-        console.log('storage id', id, 'currentId', processMarker.id);
+        if (debug) console.log('storage id', id, 'currentId', processMarker.id);
         return ( id === processMarker.id );
     };
 
     var tick = function () {
         processMarker['time'] = Date.now();
-        console.log('run', processMarker.id, processMarker['time']);
+        if (debug) console.log('run', processMarker.id, processMarker['time']);
         return str = JSON.stringify(processMarker)
     };
 
@@ -60,19 +61,19 @@ var run = function (options) {
 
     if (isRunning()) {
         if (!thisTabRunOwner()) {
-            console.log('is isRunning but not this tab, set checker');   
+            if (debug) console.log('is isRunning but not this tab, set checker');   
             var q = setInterval(function () {
-                console.log('tryInit');
+                if (debug) console.log('tryInit');
                 tryInit();
                 if (thisTabRunOwner()) { 
                     clearInterval(q); 
                 }
             }, interval);        
         } else {
-            console.log('is running and this tab owner - all ok');
+            if (debug) console.log('is running and this tab owner - all ok');
         }
     } else {
-        console.log('not running, tryInit')
+        if (debug) console.log('not running, tryInit')
         tryInit();
     }
 
